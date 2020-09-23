@@ -1,10 +1,27 @@
 {
     "name": "log-commander",
-    "version": "0.1.0",
     "description": "A simple logger made in typescript",
+    "author": {
+        "name": "Jiaxing Hu"
+    },
+    "version": "0.1.0",
+    "license": "MIT",
+    "keywords": [
+        "logger",
+        "log",
+        "simple",
+        "log-commander",
+        "node"
+    ],
+    "bugs": {
+        "url": "https://github.com/slofl/log-commander/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/slofl/log-commander.git"
+    },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "license": "MIT",
     "dependencies": {
         "chalk": "^4.1.0"
     },
@@ -29,15 +46,5 @@
         "preversion": "npm run lint",
         "version": "npm run format && git add -A src",
         "postversion": "git push && git push --tags"
-    },
-    "keywords": [
-        "logger",
-        "log",
-        "simple",
-        "log-it",
-        "node"
-    ],
-    "author": {
-        "name": "Jiaxing Hu"
     }
 }
