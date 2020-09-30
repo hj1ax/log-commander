@@ -1,7 +1,7 @@
-import { sep } from 'path';
-import fs from 'fs';
-
 import chalk from 'chalk';
+import fs from 'fs';
+import { sep } from 'path';
+
 
 interface LoggerOptions {
   showTimestamp: boolean;
