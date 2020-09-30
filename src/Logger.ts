@@ -94,7 +94,7 @@ export class Logger {
       ': ' +
       message;
 
-    console.log(output);
+    return console.log(output);
   }
 
   private getTimestamp(): string {
