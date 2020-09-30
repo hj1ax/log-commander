@@ -31,7 +31,7 @@ export class Logger {
 
   private logFileOptions: LogFileOptions;
 
-  protected logFile;
+  private logFile;
 
   public constructor(loggerOptions?: LoggerOptions) {
     this.timestamp = loggerOptions?.showLogLevel ?? true;
@@ -89,10 +89,10 @@ export class Logger {
       ': ' +
       message;
 
-    console.log(output);
+    return console.log(output);
   }
 
-  protected getTimestamp(): string {
+  private getTimestamp(): string {
     const date = new Date();
     const timestamp =
       date.getFullYear().toString() +
@@ -110,7 +110,7 @@ export class Logger {
     return timestamp;
   }
 
-  protected colorLogType(logType: LogType): string {
+  private colorLogType(logType: LogType): string {
     switch (logType) {
       case LogType.LOG:
         return chalk.green.bold(logType);
