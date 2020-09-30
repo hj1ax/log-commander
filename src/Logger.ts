@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import fs from 'fs';
 import { sep } from 'path';
 
-
 interface LoggerOptions {
   showTimestamp: boolean;
   showLogLevel: boolean;
@@ -12,10 +11,9 @@ interface LoggerOptions {
 interface LogFileOptions {
   enabled: boolean;
   logLevels: LogLevel[];
-  filename: string;
-  folderPath: string;
-  addTimestamp: boolean;
-  addLogLevel: boolean;
+  path: string;
+  timestamp: boolean;
+  loglevel: boolean;
 }
 
 type LogLevel = 'log' | 'warn' | 'all';
@@ -27,30 +25,29 @@ enum LogType {
 }
 
 export class Logger {
-  private showTimestamp: boolean;
+  private timestamp: boolean;
 
-  private showLogLevel: boolean;
-
-  private logFilePath: string;
+  private logLevel: boolean;
 
   private logFileOptions: LogFileOptions;
 
   protected logFile;
 
   public constructor(loggerOptions?: LoggerOptions) {
-    this.showTimestamp = loggerOptions?.showLogLevel ?? true;
-    this.showLogLevel = loggerOptions?.showLogLevel ?? true;
+    this.timestamp = loggerOptions?.showLogLevel ?? true;
+    this.logLevel = loggerOptions?.showLogLevel ?? true;
     this.logFileOptions = {
       enabled: loggerOptions?.logFileOptions.enabled ?? true,
-      filename: loggerOptions?.logFileOptions.filename ?? 'logs.txt',
-      folderPath: loggerOptions?.logFileOptions.folderPath ?? process.cwd(),
+      path: loggerOptions?.logFileOptions.path ?? 'logs.txt',
       logLevels: loggerOptions?.logFileOptions.logLevels ?? ['all'],
-      addTimestamp: loggerOptions?.logFileOptions.addTimestamp ?? true,
-      addLogLevel: loggerOptions?.logFileOptions.addLogLevel ?? true,
+      timestamp: loggerOptions?.logFileOptions.timestamp ?? true,
+      loglevel: loggerOptions?.logFileOptions.loglevel ?? true,
     };
 
-    this.logFilePath = `${this.logFileOptions.folderPath}${sep}${this.logFileOptions.filename}`;
-    this.logFile = fs.openSync(this.logFilePath, 'a+');
+    this.logFile = fs.openSync(
+      `${process.cwd()}${sep}${this.logFileOptions.path}`,
+      'a+'
+    );
   }
 
   public log(message: string): void {
@@ -71,9 +68,9 @@ export class Logger {
 
   private saveLog(logType: LogType, message: string): void {
     const output =
-      (this.logFileOptions.addTimestamp ? `[${this.getTimestamp()}]` : '') +
-      (this.logFileOptions.addLogLevel
-        ? (this.logFileOptions.addTimestamp ? ' - ' : '') + logType
+      (this.logFileOptions.timestamp ? `[${this.getTimestamp()}]` : '') +
+      (this.logFileOptions.loglevel
+        ? (this.logFileOptions.timestamp ? ' - ' : '') + logType
         : '') +
       ': ' +
       message +
@@ -82,13 +79,11 @@ export class Logger {
     fs.writeSync(this.logFile, output);
   }
 
-  protected printMessage(logType: LogType, message: string): void {
+  private printMessage(logType: LogType, message: string): void {
     const output =
-      (this.logFileOptions.addTimestamp
-        ? chalk.underline.bold(`[${this.getTimestamp()}]`)
-        : '') +
-      (this.logFileOptions.addLogLevel
-        ? (this.logFileOptions.addTimestamp ? ' - ' : '') +
+      (this.timestamp ? chalk.underline(`[${this.getTimestamp()}]`) : '') +
+      (this.logLevel
+        ? (this.logFileOptions.timestamp ? ' - ' : '') +
           this.colorLogType(logType)
         : '') +
       ': ' +
@@ -100,6 +95,12 @@ export class Logger {
   protected getTimestamp(): string {
     const date = new Date();
     const timestamp =
+      date.getFullYear().toString() +
+      '-' +
+      date.getMonth().toString().padStart(2, '0') +
+      '-' +
+      date.getDay().toString().padStart(2, '0') +
+      ' ' +
       date.getHours().toString().padStart(2, '0') +
       ':' +
       date.getMinutes().toString().padStart(2, '0') +
