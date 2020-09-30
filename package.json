@@ -41,10 +41,9 @@
         "format": "prettier --loglevel silent --write \"src/**/*.ts\"",
         "build": "tsc",
         "test": "echo \"No test\"",
-        "prepare": "yarn run build",
-        "prepublishOnly": "yarn run lint",
-        "preversion": "npm run lint",
-        "version": "npm run format && git add -A src",
+        "prepublishOnly": "yarn run lint && yarn run build",
+        "preversion": "yarn run lint",
+        "version": "yarn run format && git add -A src",
         "postversion": "git push && git push --tags"
     }
 }
