@@ -35,7 +35,7 @@ export class Logger {
 
   private logFileOptions: LogFileOptions;
 
-  protected logFile;
+  private logFile;
 
   public constructor(loggerOptions?: LoggerOptions) {
     this.showTimestamp = loggerOptions?.showLogLevel ?? true;
@@ -82,7 +82,7 @@ export class Logger {
     fs.writeSync(this.logFile, output);
   }
 
-  protected printMessage(logType: LogType, message: string): void {
+  private printMessage(logType: LogType, message: string): void {
     const output =
       (this.logFileOptions.addTimestamp
         ? chalk.underline.bold(`[${this.getTimestamp()}]`)
@@ -94,10 +94,10 @@ export class Logger {
       ': ' +
       message;
 
-    console.log(output);
+    return console.log(output);
   }
 
-  protected getTimestamp(): string {
+  private getTimestamp(): string {
     const date = new Date();
     const timestamp =
       date.getHours().toString().padStart(2, '0') +
@@ -109,7 +109,7 @@ export class Logger {
     return timestamp;
   }
 
-  protected colorLogType(logType: LogType): string {
+  private colorLogType(logType: LogType): string {
     switch (logType) {
       case LogType.LOG:
         return chalk.green.bold(logType);
